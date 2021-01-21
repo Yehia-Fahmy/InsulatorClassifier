@@ -12,22 +12,17 @@ import matplotlib.pyplot as plt
 def load_data():
     print("Loading data...")
     err = 0  # variable to keep track of any missed images
-    path = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\Code\First_App'  # path to directory with the all pictures
+    path = PATH
     for catagory in CATAGORIES:  # for every catagory
-        folder = os.path.join(path, catagory)   # joins folder with images
-        class_num = CATAGORIES.index(catagory)  # 0 for cat 1 for dog
-        counter = 0
+        folder = os.path.join(path, catagory)  # joins folder with images
+        class_num = CATAGORIES.index(catagory)  # gives each folder a class number
         for img in os.listdir(folder):  # for every image
-            if counter < 1000:
-                try:
-                    img_array = cv2.imread(os.path.join(folder, img), cv2.IMREAD_GRAYSCALE)  # reads the image
-                    img_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # confirms it is the correct size
-                    DATA.append([img_array, class_num])  # adds the data as a list
-                    counter = counter + 1
-                except Exception as e:
-                    err = err + 1  # counts the errors we have
-            else:
-                break
+            try:
+                img_array = cv2.imread(os.path.join(folder, img), cv2.IMREAD_GRAYSCALE)  # reads the image
+                img_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # confirms it is the correct size
+                DATA.append([img_array, class_num])  # adds the data as a list
+            except Exception as e:
+                err = err + 1  # counts the errors we have
         print(len(DATA), "training examples (", err, "errors )")
 
 
@@ -37,7 +32,7 @@ def load_testing_data():
     err = 0  # variable to keep track of any missed images
     path = PATH
     for catagory in TESTING_CATAGORIES:  # for every catagory
-        folder = os.path.join(path, catagory)   # joins folder with images
+        folder = os.path.join(path, catagory)  # joins folder with images
         class_num = TESTING_CATAGORIES.index(catagory)  # 0 for cat 1 for dog
         for img in os.listdir(folder):  # for every image
             try:
@@ -49,20 +44,19 @@ def load_testing_data():
         print(len(TESTING_DATA), "testing examples (", err, "errors )")
 
 
-
 # shuffles the data
 def shuffle_data(data):
     print("Shuffling data...")
-    random.shuffle(data)        # randomly shuffles the data
+    random.shuffle(data)  # randomly shuffles the data
     return data
 
 
 # splits into lables and features
 def split_data(data):
     print("Splitting data...")
-    X = []      # list of images
-    y = []      # list of labels
-    for features, label in data:        # splits the data
+    X = []  # list of images
+    y = []  # list of labels
+    for features, label in data:  # splits the data
         X.append(features)
         y.append(label)
     X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE)
@@ -110,7 +104,13 @@ def convert_time(seconds):
 
 
 # global variables
-CATAGORIES = ['cats', 'dogs']
+CATAGORIES = ['Class (1)'
+    , 'Class (2)'
+    , 'Class (3)'
+    , 'Class (4)'
+    , 'Class (5)'
+    , 'Class (6)'
+    , 'Class (7)']
 TESTING_CATAGORIES = ['test_cats', 'test_dogs']
 DATA = []
 TESTING_DATA = []
