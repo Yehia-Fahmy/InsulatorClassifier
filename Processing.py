@@ -35,7 +35,7 @@ def load_data():
 def load_testing_data():
     print("Loading testing data...")
     err = 0  # variable to keep track of any missed images
-    path = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\Code\First_App'  # path to directory with the all pictures
+    path = PATH
     for catagory in TESTING_CATAGORIES:  # for every catagory
         folder = os.path.join(path, catagory)   # joins folder with images
         class_num = TESTING_CATAGORIES.index(catagory)  # 0 for cat 1 for dog
@@ -107,3 +107,13 @@ def convert_time(seconds):
     minutes = seconds // 60
     seconds %= 60
     return "%d:%02d:%02d" % (hour, minutes, seconds)
+
+
+# global variables
+CATAGORIES = ['cats', 'dogs']
+TESTING_CATAGORIES = ['test_cats', 'test_dogs']
+DATA = []
+TESTING_DATA = []
+IMG_SIZE = 224
+PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'  # path to directory with the all pictures
+
