@@ -117,3 +117,26 @@ TESTING_DATA = []
 IMG_SIZE = 224
 PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'  # path to directory with the all pictures
 
+# code to run
+start_time = t.time()
+print("Starting...")
+load_data()
+load_testing_data()
+
+DATA = shuffle_data(DATA)
+TESTING_DATA = shuffle_data(TESTING_DATA)
+
+images, labels = split_data(DATA)
+testing_images, testing_labels = split_data(TESTING_DATA)
+
+save_data(images, labels)
+save_testing_data(testing_images, testing_labels)
+
+# prints the elapsed time for convenience
+total_time = t.time() - start_time
+total_time = round(total_time, 2)
+total_time = convert_time(total_time)
+
+# final message
+print(f"Finished in: {total_time}")
+print('Success!')
