@@ -12,13 +12,13 @@ import matplotlib.pyplot as plt
 def load_data():
     print("Loading data...")
     err = 0  # variable to keep track of any missed images
-    path = PATH
-    for catagory in CATAGORIES:  # for every catagory
-        folder = os.path.join(path, catagory)  # joins folder with images
-        class_num = CATAGORIES.index(catagory)  # gives each folder a class number
+    path = TRAINING_PATH
+    for category in CATEGORIES:  # for every category
+        folder = os.path.join(path, category)  # joins folder with images
+        class_num = CATEGORIES.index(category)  # gives each folder a class number
         for img in os.listdir(folder):  # for every image
             try:
-                img_array = cv2.imread(os.path.join(folder, img), cv2.IMREAD_GRAYSCALE)  # reads the image
+                img_array = cv2.imread(os.path.join(folder, img), cv2.IMREAD_COLOR)  # reads the image
                 img_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # confirms it is the correct size
                 DATA.append([img_array, class_num])  # adds the data as a list
             except Exception as e:
@@ -30,13 +30,13 @@ def load_data():
 def load_testing_data():
     print("Loading testing data...")
     err = 0  # variable to keep track of any missed images
-    path = PATH
-    for catagory in TESTING_CATAGORIES:  # for every catagory
-        folder = os.path.join(path, catagory)  # joins folder with images
-        class_num = TESTING_CATAGORIES.index(catagory)  # 0 for cat 1 for dog
+    path = TESTING_PATH
+    for category in CATEGORIES:  # for every category
+        folder = os.path.join(path, category)  # joins folder with images
+        class_num = CATEGORIES.index(category)
         for img in os.listdir(folder):  # for every image
             try:
-                img_array = cv2.imread(os.path.join(folder, img), cv2.IMREAD_GRAYSCALE)  # reads the image
+                img_array = cv2.imread(os.path.join(folder, img), cv2.IMREAD_COLOR)  # reads the image
                 img_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # confirms it is the correct size
                 TESTING_DATA.append([img_array, class_num])  # adds the data as a list
             except Exception as e:
@@ -59,7 +59,7 @@ def split_data(data):
     for features, label in data:  # splits the data
         X.append(features)
         y.append(label)
-    X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE)
+    X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
     return X, y
 
 
@@ -104,22 +104,26 @@ def convert_time(seconds):
 
 
 # global variables
-CATAGORIES = ['Class (1)'
+CATEGORIES = ['Class (1)'
     , 'Class (2)'
     , 'Class (3)'
     , 'Class (4)'
     , 'Class (5)'
     , 'Class (6)'
     , 'Class (7)']
-TESTING_CATAGORIES = ['test_cats', 'test_dogs']
+
 DATA = []
 TESTING_DATA = []
 IMG_SIZE = 224
-PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'  # path to directory with the all pictures
+# path to training photos
+TRAINING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'
+# path to testing photos
+TESTING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\Testing_DatabaseOrganized'
 
 # code to run
 start_time = t.time()
 print("Starting...")
+
 load_data()
 load_testing_data()
 
