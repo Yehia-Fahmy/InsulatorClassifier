@@ -41,12 +41,7 @@ def reshape_data(X, y):
     print(f"Reshaping data...")
     X = np.array(X)     # ensuring that lists are instead arrays
     X = X / 255
-    # single_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
     triple_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
-    '''for img1 in single_channel:
-        img3 = cv2.merge((img1, img1, img1))
-        triple_channel.append(img3)
-    triple_channel = np.array(triple_channel)'''
     y = np.array(y)
     y = to_categorical(y)
     print(f"X.shape(): {triple_channel.shape}, y.shape(): {y.shape}")
@@ -56,11 +51,11 @@ def reshape_data(X, y):
 # function to build the network
 def build_network():
     mobile = keras.applications.mobilenet.MobileNet()
-    x2 = mobile.layers[-6].output
-    predictions = Dense(2, activation='softmax')(x2)
+    x = mobile.layers[-6].output
+    predictions = Dense(7, activation='softmax')(x)
     model = M(inputs=mobile.input, outputs=predictions)
     # makes only the last 5 layers trainable
-    for layer in model.layers[:-5]:
+    for layer in model.layers[:-23]:
         layer.trainable = False
     model.compile(Adam(lr=.0001), loss='categorical_crossentropy', metrics=['accuracy'])
     model.summary()
@@ -144,7 +139,6 @@ testing_images, testing_labels = reshape_data(testing_images, testing_labels)
 
 # build and train the model
 our_model = build_network()
-exit()
 trained_model = train_model(our_model, training_images, training_labels)
 
 # save the model
