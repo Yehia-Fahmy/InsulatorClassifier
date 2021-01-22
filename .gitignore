@@ -136,3 +136,6 @@ dmypy.json
 /Labels.pickle
 /Testing_Images.pickle
 /Testing_Labels.pickle
+/Full_Size_Model.h5
+/results.txt
+/TF_Lite_Model.tflite
