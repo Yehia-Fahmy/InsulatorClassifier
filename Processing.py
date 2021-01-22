@@ -103,11 +103,36 @@ def convert_time(seconds):
     return "%d:%02d:%02d" % (hour, minutes, seconds)
 
 
+# function to take the middle portion of each image
+def crop_middle(data):
+    print("Cropping data...")
+    new_data = []
+    err = 0
+    try:
+        for pair in data:
+            img = pair[0]
+            label = pair[1]
+            y, x, z = img.shape
+            startx = int(x / 2 - (NEW_SQUARE_DIM / 2))
+            starty = int(y / 2 - (NEW_SQUARE_DIM / 2))
+            new_img = img[starty:starty+NEW_SQUARE_DIM, startx:startx+NEW_SQUARE_DIM, 0:3]
+            new_data.append([new_img, label])
+            show(new_img)
+    except Exception as e:
+        err += 1
+
+    print(f"Finished cropping with {err} errors")
+    return new_data
+
+
 # global variables
 CATEGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)']
 
 DATA = []
 TESTING_DATA = []
+ORIGINAL_HEIGHT = 3216
+ORIGINAL_WIDTH = 4228
+NEW_SQUARE_DIM = 244 * 5
 IMG_SIZE = 224
 # path to training photos
 TRAINING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'
