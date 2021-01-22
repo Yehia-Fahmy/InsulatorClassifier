@@ -8,6 +8,7 @@ import random
 import pickle
 import matplotlib.pyplot as plt
 
+
 # function definitions
 # loads the pictures from the local machine
 def load_data():
@@ -20,7 +21,7 @@ def load_data():
         for img in os.listdir(folder):  # for every image
             try:
                 img_array = cv2.imread(os.path.join(folder, img), cv2.IMREAD_COLOR)  # reads the image
-                img_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # confirms it is the correct size
+                img_array = cv2.resize(img_array, (ORIGINAL_WIDTH, ORIGINAL_HEIGHT))  # confirms it is the correct size
                 DATA.append([img_array, class_num])  # adds the data as a list
             except Exception as e:
                 err = err + 1  # counts the errors we have
@@ -38,7 +39,7 @@ def load_testing_data():
         for img in os.listdir(folder):  # for every image
             try:
                 img_array = cv2.imread(os.path.join(folder, img), cv2.IMREAD_COLOR)  # reads the image
-                img_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # confirms it is the correct size
+                img_array = cv2.resize(img_array, (ORIGINAL_WIDTH, ORIGINAL_HEIGHT))  # confirms it is the correct size
                 TESTING_DATA.append([img_array, class_num])  # adds the data as a list
             except Exception as e:
                 err = err + 1  # counts the errors we have
@@ -104,11 +105,36 @@ def convert_time(seconds):
     return "%d:%02d:%02d" % (hour, minutes, seconds)
 
 
+# function to take the middle portion of each image
+def crop_middle(data):
+    print("Cropping data...")
+    new_data = []
+    err = 0
+    try:
+        for pair in data:
+            img = pair[0]
+            label = pair[1]
+            y, x, z = img.shape
+            startx = int(x / 2 - (NEW_SQUARE_DIM / 2))
+            starty = int(y / 2 - (NEW_SQUARE_DIM / 2))
+            new_img = img[starty:starty+NEW_SQUARE_DIM, startx:startx+NEW_SQUARE_DIM, 0:3]
+            new_data.append([new_img, label])
+    except Exception as e:
+        err += 1
+
+    print(f"Finished cropping with {err} errors")
+    return new_data
+
+
 # global variables
-CATEGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)']
+CATEGORIES = ['Class (1)']
+''', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)'''
 
 DATA = []
 TESTING_DATA = []
+ORIGINAL_HEIGHT = 3216
+ORIGINAL_WIDTH = 4228
+NEW_SQUARE_DIM = 244 * 10
 IMG_SIZE = 224
 # path to training photos
 TRAINING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'
@@ -119,17 +145,19 @@ TESTING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co
 start_time = t.time()
 print("Starting...")
 
-load_data()
+# load_data()
 load_testing_data()
 
-DATA = shuffle_data(DATA)
-TESTING_DATA = shuffle_data(TESTING_DATA)
+TESTING_DATA = crop_middle(TESTING_DATA)
 
-images, labels = split_data(DATA)
+'''DATA = shuffle_data(DATA)
+TESTING_DATA = shuffle_data(TESTING_DATA)'''
+
+'''images, labels = split_data(DATA)
 testing_images, testing_labels = split_data(TESTING_DATA)
 
 save_data(images, labels)
-save_testing_data(testing_images, testing_labels)
+save_testing_data(testing_images, testing_labels)'''
 
 # prints the elapsed time for convenience
 total_time = t.time() - start_time
