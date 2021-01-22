@@ -41,12 +41,12 @@ def reshape_data(X, y):
     print(f"Reshaping data...")
     X = np.array(X)     # ensuring that lists are instead arrays
     X = X / 255
-    single_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
-    triple_channel = []
-    for img1 in single_channel:
+    # single_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
+    triple_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
+    '''for img1 in single_channel:
         img3 = cv2.merge((img1, img1, img1))
         triple_channel.append(img3)
-    triple_channel = np.array(triple_channel)
+    triple_channel = np.array(triple_channel)'''
     y = np.array(y)
     y = to_categorical(y)
     print(f"X.shape(): {triple_channel.shape}, y.shape(): {y.shape}")
@@ -97,6 +97,22 @@ def convert_model(model):
     return new_model
 
 
+# gets size of file
+def get_file_size(file_path):
+    size = os.path.getsize(file_path)
+    return size
+
+
+# converts bytes for readability
+def convert_bytes(size, unit=None):
+    if unit == "KB":
+        return 'File size: ' + str(round(size / 1024, 3)) + ' Kilobytes'
+    elif unit == "MB":
+        return 'File size: ' + str(round(size / (1024 * 1024), 3)) + ' Megabytes'
+    else:
+        return 'File size: ' + str(size) + ' bytes'
+
+
 # global variables
 CATAGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)']
 DATA = []
@@ -121,13 +137,14 @@ training_images = load_data('Images.pickle')
 training_labels = load_data('Labels.pickle')
 testing_images = load_data('Testing_Images.pickle')
 testing_labels = load_data('Testing_Labels.pickle')
-exit()
+
 # reshape the data
 training_images, training_labels = reshape_data(training_images, training_labels)
 testing_images, testing_labels = reshape_data(testing_images, testing_labels)
 
 # build and train the model
 our_model = build_network()
+exit()
 trained_model = train_model(our_model, training_images, training_labels)
 
 # save the model
