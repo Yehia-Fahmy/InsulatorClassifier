@@ -76,13 +76,18 @@ def print_results():
     IMG_SIZE = {IMG_SIZE}
     ACCURACY = {acc}%
     TIME = {total_time}
+    EPOCHS = {NUM_EPOCHS}
     Full {full_bytes}
     Lite {lite_bytes}
     '''
-    file = open('results.txt', 'a')
-    file.write(model_results)
-    our_model.summary(print_fn=lambda x: file.write(x + '\n'))
-    file.close()
+    f1 = open('results.txt', 'r')
+    str1 = f1.read()
+    f1.close()
+    f2 = open('results.txt', 'w')
+    f2.write(model_results)
+    our_model.summary(print_fn=lambda x: f2.write(x + '\n'))
+    f2.write(str1)
+    f2.close()
 
 
 # function to convert from tf model to tf.lite for mobile application
@@ -117,8 +122,8 @@ IMG_SIZE = 224
 TRAINING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'
 # path to testing photos
 TESTING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\Testing_DatabaseOrganized'
-NUM_EPOCHS = 10
-BATCH_SIZE = 10
+NUM_EPOCHS = 3
+BATCH_SIZE = 1
 KERAS_MODEL_NAME = 'Full_Size_Model.h5'
 TF_LITE_MODEL_NAME = 'TF_Lite_Model.tflite'
 
