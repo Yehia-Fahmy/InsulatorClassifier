@@ -12,6 +12,92 @@ import pickle
 from keras.utils import to_categorical
 
 
+# functions
+# function to convert the time into something readable
+def convert_time(seconds):
+    seconds = seconds % (24 * 3600)
+    hour = seconds // 3600
+    seconds %= 3600
+    minutes = seconds // 60
+    seconds %= 60
+    return "%d:%02d:%02d" % (hour, minutes, seconds)
+
+
+# function to load .pickle files
+def load_data(file_name):
+    print(f'Loading {file_name}...')
+    file = pickle.load(open(file_name, 'rb'))
+    return file
+
+
+# quick function to show the image
+def show(img):
+    plt.imshow(img, cmap='gray')
+    plt.show()
+
+
+# reshapes the images to the right size
+def reshape_data(X, y):
+    print(f"Reshaping data...")
+    X = np.array(X)     # ensuring that lists are instead arrays
+    X = X / 255
+    single_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
+    triple_channel = []
+    for img1 in single_channel:
+        img3 = cv2.merge((img1, img1, img1))
+        triple_channel.append(img3)
+    triple_channel = np.array(triple_channel)
+    y = np.array(y)
+    y = to_categorical(y)
+    print(f"X.shape(): {triple_channel.shape}, y.shape(): {y.shape}")
+    return triple_channel, y
+
+
+# function to build the network
+def build_network():
+    mobile = keras.applications.mobilenet.MobileNet()
+    x2 = mobile.layers[-6].output
+    predictions = Dense(2, activation='softmax')(x2)
+    model = M(inputs=mobile.input, outputs=predictions)
+    # makes only the last 5 layers trainable
+    for layer in model.layers[:-5]:
+        layer.trainable = False
+    model.compile(Adam(lr=.0001), loss='categorical_crossentropy', metrics=['accuracy'])
+    model.summary()
+    return model
+
+
+# function to train the model
+def train_model(model, imgs, labels):
+    print("Training model...")
+    model.fit(imgs, labels, epochs=NUM_EPOCHS, validation_split=0.1, batch_size=BATCH_SIZE)
+    return model
+
+
+# print the results to the txt file
+def print_results():
+    model_results = f'''
+    #################################################################
+    IMG_SIZE = {IMG_SIZE}
+    ACCURACY = {acc}%
+    TIME = {total_time}
+    Full {full_bytes}
+    Lite {lite_bytes}
+    '''
+    file = open('results.txt', 'a')
+    file.write(model_results)
+    our_model.summary(print_fn=lambda x: file.write(x + '\n'))
+    file.close()
+
+
+# function to convert from tf model to tf.lite for mobile application
+def convert_model(model):
+    tf_lite_converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    new_model = tf_lite_converter.convert()
+    return new_model
+
+
+
 # global variables
 CATAGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)']
 DATA = []
@@ -21,3 +107,7 @@ IMG_SIZE = 224
 TRAINING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'
 # path to testing photos
 TESTING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\Testing_DatabaseOrganized'
+NUM_EPOCHS = 10
+BATCH_SIZE = 10
+KERAS_MODEL_NAME = 'Full_Size_Model.h5'
+TF_LITE_MODEL_NAME = 'TF_Lite_Model.tflite'
