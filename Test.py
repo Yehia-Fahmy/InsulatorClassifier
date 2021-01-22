@@ -119,6 +119,7 @@ def crop_middle(data):
             starty = int(y / 2 - (NEW_SQUARE_DIM / 2))
             new_img = img[starty:starty+NEW_SQUARE_DIM, startx:startx+NEW_SQUARE_DIM, 0:3]
             new_data.append([new_img, label])
+            show(new_img)
     except Exception as e:
         err += 1
 
@@ -134,7 +135,7 @@ DATA = []
 TESTING_DATA = []
 ORIGINAL_HEIGHT = 3216
 ORIGINAL_WIDTH = 4228
-NEW_SQUARE_DIM = 244 * 10
+NEW_SQUARE_DIM = 244 * 5
 IMG_SIZE = 224
 # path to training photos
 TRAINING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'
