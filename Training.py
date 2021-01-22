@@ -97,7 +97,6 @@ def convert_model(model):
     return new_model
 
 
-
 # global variables
 CATAGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)']
 DATA = []
@@ -111,3 +110,49 @@ NUM_EPOCHS = 10
 BATCH_SIZE = 10
 KERAS_MODEL_NAME = 'Full_Size_Model.h5'
 TF_LITE_MODEL_NAME = 'TF_Lite_Model.tflite'
+
+
+# Code to run
+start_time = t.time()
+print("Starting...")
+
+# load in data
+training_images = load_data('Images.pickle')
+training_labels = load_data('Labels.pickle')
+testing_images = load_data('Testing_Images.pickle')
+testing_labels = load_data('Testing_Labels.pickle')
+exit()
+# reshape the data
+training_images, training_labels = reshape_data(training_images, training_labels)
+testing_images, testing_labels = reshape_data(testing_images, testing_labels)
+
+# build and train the model
+our_model = build_network()
+trained_model = train_model(our_model, training_images, training_labels)
+
+# save the model
+trained_model.save(KERAS_MODEL_NAME)
+full_bytes = convert_bytes(get_file_size(KERAS_MODEL_NAME), "MB")
+
+# evaluate the model
+loss, acc = trained_model.evaluate(testing_images, testing_labels, batch_size=BATCH_SIZE, use_multiprocessing='True')
+acc = round(acc * 100, 2)
+
+# convert the model
+tf_lite_model = convert_model(trained_model)
+
+# save the model
+open(TF_LITE_MODEL_NAME, "wb").write(tf_lite_model)
+lite_bytes = convert_bytes(get_file_size(TF_LITE_MODEL_NAME), "MB")
+
+# prints the elapsed time for convenience
+total_time = t.time() - start_time
+total_time = round(total_time, 2)
+total_time = convert_time(total_time)
+
+# prints the results
+print_results()
+
+# final message
+print(f"Finished in: {total_time}")
+print('Success!')
