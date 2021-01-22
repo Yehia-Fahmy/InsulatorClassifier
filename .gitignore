@@ -132,3 +132,7 @@ dmypy.json
 /.idea/modules.xml
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/vcs.xml
+/Images.pickle
+/Labels.pickle
+/Testing_Images.pickle
+/Testing_Labels.pickle
