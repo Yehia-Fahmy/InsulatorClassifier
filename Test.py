@@ -102,3 +102,40 @@ def convert_time(seconds):
     minutes = seconds // 60
     seconds %= 60
     return "%d:%02d:%02d" % (hour, minutes, seconds)
+
+
+# global variables
+CATEGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)']
+
+DATA = []
+TESTING_DATA = []
+IMG_SIZE = 224
+# path to training photos
+TRAINING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'
+# path to testing photos
+TESTING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\Testing_DatabaseOrganized'
+
+# code to run
+start_time = t.time()
+print("Starting...")
+
+load_data()
+load_testing_data()
+
+DATA = shuffle_data(DATA)
+TESTING_DATA = shuffle_data(TESTING_DATA)
+
+images, labels = split_data(DATA)
+testing_images, testing_labels = split_data(TESTING_DATA)
+
+save_data(images, labels)
+save_testing_data(testing_images, testing_labels)
+
+# prints the elapsed time for convenience
+total_time = t.time() - start_time
+total_time = round(total_time, 2)
+total_time = convert_time(total_time)
+
+# final message
+print(f"Finished in: {total_time}")
+print('Success!')
