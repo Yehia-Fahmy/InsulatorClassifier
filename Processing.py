@@ -19,11 +19,11 @@ def load_data():
         for img in os.listdir(folder):  # for every image
             try:
                 img_array = cv2.imread(os.path.join(folder, img), cv2.IMREAD_COLOR)  # reads the image
-                img_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # confirms it is the correct size
-                DATA.append([img_array, class_num])  # adds the data as a list
+                img_array = cv2.resize(img_array, (ORIGINAL_WIDTH, ORIGINAL_HEIGHT))  # confirms it is the correct size
+                TRAINING_DATA.append([img_array, class_num])  # adds the data as a list
             except Exception as e:
                 err = err + 1  # counts the errors we have
-        print(len(DATA), "training examples (", err, "errors )")
+        print(len(TRAINING_DATA), "training examples (", err, "errors )")
 
 
 # load testing data
@@ -37,7 +37,7 @@ def load_testing_data():
         for img in os.listdir(folder):  # for every image
             try:
                 img_array = cv2.imread(os.path.join(folder, img), cv2.IMREAD_COLOR)  # reads the image
-                img_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # confirms it is the correct size
+                img_array = cv2.resize(img_array, (ORIGINAL_WIDTH, ORIGINAL_HEIGHT))  # confirms it is the correct size
                 TESTING_DATA.append([img_array, class_num])  # adds the data as a list
             except Exception as e:
                 err = err + 1  # counts the errors we have
@@ -117,7 +117,6 @@ def crop_middle(data):
             starty = int(y / 2 - (NEW_SQUARE_DIM / 2))
             new_img = img[starty:starty+NEW_SQUARE_DIM, startx:startx+NEW_SQUARE_DIM, 0:3]
             new_data.append([new_img, label])
-            show(new_img)
     except Exception as e:
         err += 1
 
@@ -128,7 +127,7 @@ def crop_middle(data):
 # global variables
 CATEGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)']
 
-DATA = []
+TRAINING_DATA = []
 TESTING_DATA = []
 ORIGINAL_HEIGHT = 3216
 ORIGINAL_WIDTH = 4228
@@ -146,10 +145,13 @@ print("Starting...")
 load_data()
 load_testing_data()
 
-DATA = shuffle_data(DATA)
+TRAINING_DATA = crop_middle(TRAINING_DATA)
+TESTING_DATA = crop_middle(TESTING_DATA)
+
+TRAINING_DATA = shuffle_data(TRAINING_DATA)
 TESTING_DATA = shuffle_data(TESTING_DATA)
 
-images, labels = split_data(DATA)
+images, labels = split_data(TRAINING_DATA)
 testing_images, testing_labels = split_data(TESTING_DATA)
 
 save_data(images, labels)
