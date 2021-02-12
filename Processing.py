@@ -59,7 +59,7 @@ def split_data(data):
     for features, label in data:  # splits the data
         X.append(features)
         y.append(label)
-    X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
+    X = np.array(X).reshape(-1, NEW_SQUARE_DIM, NEW_SQUARE_DIM, 3)
     return X, y
 
 

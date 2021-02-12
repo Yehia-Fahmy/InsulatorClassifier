@@ -4,6 +4,8 @@ from tensorflow import keras
 from tensorflow.keras import Model as M
 from tensorflow.keras.layers import Dense, Flatten
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D
 import cv2
 import os
 from matplotlib import pyplot as plt
@@ -58,6 +60,34 @@ def build_network():
     for layer in model.layers[:-23]:
         layer.trainable = False
     model.compile(Adam(lr=.0001), loss='categorical_crossentropy', metrics=['accuracy'])
+    model.summary()
+    return model
+
+
+# function to build a working model
+def build_Mark_4_40(X):
+    print("Building Mark 4.40...")
+    model = Sequential()
+    # First Layer
+    model.add(
+        Conv2D(512, kernel_size=(4, 4), activation='relu', input_shape=(X.shape[1:]), padding='same', strides=(2, 2)))
+    # Second Layer
+    model.add(Conv2D(256, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Third Layer
+    model.add(Conv2D(128, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Fourth Layer
+    model.add(Conv2D(128, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Fifth Layer
+    model.add(Conv2D(256, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Sixth Layer
+    model.add(Conv2D(512, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Final Layer
+    model.add(Flatten())
+    model.add(Dense(7, activation='softmax'))
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adamax',
+                  metrics=['accuracy'])
+    # All Done
     model.summary()
     return model
 

@@ -61,7 +61,7 @@ def split_data(data):
     for features, label in data:  # splits the data
         X.append(features)
         y.append(label)
-    X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
+    X = np.array(X).reshape(-1, NEW_SQUARE_DIM, NEW_SQUARE_DIM, 3)
     return X, y
 
 
@@ -118,8 +118,8 @@ def crop_middle(data):
             startx = int(x / 2 - (NEW_SQUARE_DIM / 2))
             starty = int(y / 2 - (NEW_SQUARE_DIM / 2))
             new_img = img[starty:starty+NEW_SQUARE_DIM, startx:startx+NEW_SQUARE_DIM, 0:3]
+            new_img = np.array(new_img)
             new_data.append([new_img, label])
-            show(new_img)
     except Exception as e:
         err += 1
 
@@ -154,11 +154,11 @@ TESTING_DATA = crop_middle(TESTING_DATA)
 '''DATA = shuffle_data(DATA)
 TESTING_DATA = shuffle_data(TESTING_DATA)'''
 
-'''images, labels = split_data(DATA)
+images, labels = split_data(DATA)
 testing_images, testing_labels = split_data(TESTING_DATA)
 
 save_data(images, labels)
-save_testing_data(testing_images, testing_labels)'''
+save_testing_data(testing_images, testing_labels)
 
 # prints the elapsed time for convenience
 total_time = t.time() - start_time
