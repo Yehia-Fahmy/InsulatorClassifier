@@ -43,11 +43,11 @@ def reshape_data(X, y):
     print(f"Reshaping data...")
     X = np.array(X)     # ensuring that lists are instead arrays
     X = X / 255
-    triple_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
+    # triple_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
     y = np.array(y)
     y = to_categorical(y)
-    print(f"X.shape(): {triple_channel.shape}, y.shape(): {y.shape}")
-    return triple_channel, y
+    print(f"X.shape(): {X.shape}, y.shape(): {y.shape}")
+    return X, y
 
 
 # function to build the network
