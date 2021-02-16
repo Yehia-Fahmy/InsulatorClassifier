@@ -92,6 +92,20 @@ def build_Mark_4_40(X):
     return model
 
 
+def build_test_model(X):
+    print('Building Test Model...')
+    model = Sequential()
+    model.add(Dense(50, activation='relu', input_shape=(X.shape[1:])))
+    model.add(Dense(50, activation='relu'))
+    # Final Layer
+    model.add(Flatten())
+    model.add(Dense(7, activation='softmax'))
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adamax',
+                  metrics=['accuracy'])
+    return model
+
+
 # function to train the model
 def train_model(model, imgs, labels):
     print("Training model...")
@@ -152,8 +166,8 @@ IMG_SIZE = 224
 TRAINING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'
 # path to testing photos
 TESTING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\Testing_DatabaseOrganized'
-NUM_EPOCHS = 3
-BATCH_SIZE = 1
+NUM_EPOCHS = 5
+BATCH_SIZE = 10
 KERAS_MODEL_NAME = 'Full_Size_Model.h5'
 TF_LITE_MODEL_NAME = 'TF_Lite_Model.tflite'
 
@@ -173,7 +187,7 @@ training_images, training_labels = reshape_data(training_images, training_labels
 testing_images, testing_labels = reshape_data(testing_images, testing_labels)
 
 # build and train the model
-our_model = build_network()
+our_model = build_test_model(training_images)
 trained_model = train_model(our_model, training_images, training_labels)
 
 # save the model

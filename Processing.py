@@ -59,7 +59,7 @@ def split_data(data):
     for features, label in data:  # splits the data
         X.append(features)
         y.append(label)
-    X = np.array(X).reshape(-1, NEW_SQUARE_DIM, NEW_SQUARE_DIM, 3)
+    X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
     return X, y
 
 
@@ -124,6 +124,23 @@ def crop_middle(data):
     return new_data
 
 
+# a function to crop the image into smaller images
+def crop_data(data):
+    print("Cropping data...")
+    err = 0             # variable to keep track of any missed images
+    new_data = []       # list to hold the data
+    try:
+        for img in data:                # for each image
+            for i in range(round(NEW_SQUARE_DIM / IMG_SIZE)):          # going through the rows
+                for k in range(round(NEW_SQUARE_DIM / IMG_SIZE)):      # going through the columns
+                    new_data.append([img[0][i * IMG_SIZE:(i + 1) * IMG_SIZE, k * IMG_SIZE:(k + 1) * IMG_SIZE],
+                                     img[1]])  # adds the data as a list
+    except Exception as e:
+        err = err + 1
+    print(f'Finished cropping with {err} errors')
+    return new_data
+
+
 # global variables
 CATEGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)']
 
@@ -147,6 +164,9 @@ load_testing_data()
 
 TRAINING_DATA = crop_middle(TRAINING_DATA)
 TESTING_DATA = crop_middle(TESTING_DATA)
+
+TRAINING_DATA = crop_data(TRAINING_DATA)
+TESTING_DATA = crop_data(TESTING_DATA)
 
 TRAINING_DATA = shuffle_data(TRAINING_DATA)
 TESTING_DATA = shuffle_data(TESTING_DATA)
