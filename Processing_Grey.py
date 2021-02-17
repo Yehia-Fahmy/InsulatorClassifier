@@ -172,11 +172,13 @@ print('---Training Data---')
 TRAINING_DATA = increase_data(TRAINING_DATA)
 TRAINING_DATA = shuffle_data(TRAINING_DATA)
 images, labels = split_data(TRAINING_DATA)
+save_data(images, labels)
 
 print('---Testing Data---')
 TESTING_DATA = increase_data(TESTING_DATA)
 TESTING_DATA = shuffle_data(TESTING_DATA)
 testing_images, testing_labels = split_data(TESTING_DATA)
+save_testing_data(testing_images, testing_labels)
 
 
 # prints the elapsed time for convenience
