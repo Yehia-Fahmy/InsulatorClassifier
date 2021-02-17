@@ -125,7 +125,7 @@ def split_data(data):
         size = features.shape[1]
         X.append(features)
         y.append(label)
-    X = np.array(X).reshape(-1, size, size, 3)
+    X = np.array(X).reshape(-1, size, size, 1)
     return X, y
 
 
@@ -171,10 +171,12 @@ load_data()
 print('---Training Data---')
 TRAINING_DATA = increase_data(TRAINING_DATA)
 TRAINING_DATA = shuffle_data(TRAINING_DATA)
+images, labels = split_data(TRAINING_DATA)
 
 print('---Testing Data---')
 TESTING_DATA = increase_data(TESTING_DATA)
 TESTING_DATA = shuffle_data(TESTING_DATA)
+testing_images, testing_labels = split_data(TESTING_DATA)
 
 
 # prints the elapsed time for convenience
