@@ -56,4 +56,16 @@ ORIGINAL_SIZE = 480
 
 
 # code to run
+start_time = t.time()
+print("Starting...")
+
 load_data()
+
+# prints the elapsed time for convenience
+total_time = t.time() - start_time
+total_time = round(total_time, 2)
+total_time = convert_time(total_time)
+
+# final message
+print(f"Finished in: {total_time}")
+print('Success!')
