@@ -166,8 +166,8 @@ IMG_SIZE = 224
 TRAINING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'
 # path to testing photos
 TESTING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\Testing_DatabaseOrganized'
-NUM_EPOCHS = 5
-BATCH_SIZE = 10
+NUM_EPOCHS = 100
+BATCH_SIZE = 30
 KERAS_MODEL_NAME = 'Full_Size_Model.h5'
 TF_LITE_MODEL_NAME = 'TF_Lite_Model.tflite'
 
@@ -187,16 +187,17 @@ training_images, training_labels = reshape_data(training_images, training_labels
 testing_images, testing_labels = reshape_data(testing_images, testing_labels)
 
 # build and train the model
-our_model = build_test_model(training_images)
+our_model = build_network()
 trained_model = train_model(our_model, training_images, training_labels)
-
-# save the model
-trained_model.save(KERAS_MODEL_NAME)
-full_bytes = convert_bytes(get_file_size(KERAS_MODEL_NAME), "MB")
 
 # evaluate the model
 loss, acc = trained_model.evaluate(testing_images, testing_labels, batch_size=BATCH_SIZE, use_multiprocessing='True')
 acc = round(acc * 100, 2)
+print(f'accuracy: {acc}%')
+
+# save the model
+trained_model.save(KERAS_MODEL_NAME)
+full_bytes = convert_bytes(get_file_size(KERAS_MODEL_NAME), "MB")
 
 # convert the model
 tf_lite_model = convert_model(trained_model)
