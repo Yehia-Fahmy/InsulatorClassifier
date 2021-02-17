@@ -47,12 +47,74 @@ def load_data():
     print(f'{len(TESTING_DATA)} Testing images')
 
 
+# a function to crop the image into smaller images
+def crop_data(data):
+    print("Cropping data...")
+    err = 0             # variable to keep track of any missed images
+    new_data = []       # list to hold the data
+    try:
+        for img in data:                # for each image
+            for i in range(round(ORIGINAL_SIZE / IMG_SIZE)):          # going through the rows
+                for k in range(round(ORIGINAL_SIZE / IMG_SIZE)):      # going through the columns
+                    new_data.append([img[0][i * IMG_SIZE:(i + 1) * IMG_SIZE, k * IMG_SIZE:(k + 1) * IMG_SIZE],
+                                     img[1]])  # adds the data as a list
+    except Exception as e:
+        err = err + 1
+    print(f'Finished cropping with {err} errors')
+    print(f'{len(new_data)} images')
+    return new_data
+
+
+# rotates the images in all orientations
+def rotate_data(data):
+    print("Rotating data...")
+    new_data = []  # list to hold the data
+    err = 0  # variable to keep track of any missed images
+    try:
+        for img in data:
+            new_data.append(img)  # adds the original
+            new_data.append([cv2.rotate(img[0], cv2.ROTATE_90_CLOCKWISE), img[1]])
+            new_data.append([cv2.rotate(img[0], cv2.ROTATE_90_COUNTERCLOCKWISE), img[1]])
+            new_data.append([cv2.rotate(img[0], cv2.ROTATE_180), img[1]])  # adds the other 3 orientations
+    except Exception as e:
+        err = err + 1
+    print(f'{len(new_data)} images')
+    return new_data
+
+
+# flips the images in all orientations
+def flip_data(data):
+    print("Flipping data...")
+    new_data = []       # list to hold the data
+    err = 0             # variable to keep track of any missed images
+    try:
+        for img in data:
+            new_data.append([img[0], img[1]])  # adds the original image
+            new_data.append([np.flip(img[0], axis=0), img[1]])  # adds the image flipped horizontally
+            new_data.append([np.flip(img[0], axis=1), img[1]])  # adds the image flipped vertically
+            new_data.append([np.flip(np.flip(img[0], axis=1), axis=0), img[1]])  # adds the image flipped both ways
+    except Exception as e:
+        err = err + 1
+    print(f'{len(new_data)} images')
+    return new_data
+
+
+# runs all the functions that can increase the numbers of training data
+def increase_data(data):
+    print('Increasing data...')
+    new_data = crop_data(data)
+    new_data = rotate_data(new_data)
+    new_data = flip_data(new_data)
+    return new_data
+
+
 # global variables
 CATAGORIES = ["HC-1", "HC-2", "HC-3", "HC-4", "HC-5", "HC-6", "HC-7"]
 TRAINING_DATA = []
 TESTING_DATA = []
 IMAGE_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\Enhanced_Pictures'
 ORIGINAL_SIZE = 480
+IMG_SIZE = 224
 
 
 # code to run
@@ -60,6 +122,8 @@ start_time = t.time()
 print("Starting...")
 
 load_data()
+
+TESTING_DATA = increase_data(TESTING_DATA)
 
 # prints the elapsed time for convenience
 total_time = t.time() - start_time
