@@ -108,6 +108,51 @@ def increase_data(data):
     return new_data
 
 
+# shuffles the data
+def shuffle_data(data):
+    print("Shuffling data...")
+    random.shuffle(data)  # randomly shuffles the data
+    return data
+
+
+# splits into lables and features
+def split_data(data):
+    print("Splitting data...")
+    X = []  # list of images
+    y = []  # list of labels
+    size = 0
+    for features, label in data:  # splits the data
+        size = features.shape[1]
+        X.append(features)
+        y.append(label)
+    X = np.array(X).reshape(-1, size, size, 3)
+    return X, y
+
+
+# dumps the pictures
+def save_data(X, y):
+    print("Saving...")
+    pickle_out = open("Images.pickle", "wb")
+    pickle.dump(X, pickle_out)
+    pickle_out.close()
+
+    pickle_out = open("Labels.pickle", "wb")
+    pickle.dump(y, pickle_out)
+    pickle_out.close()
+
+
+# dumps the testing pictures
+def save_testing_data(X, y):
+    print("Saving...")
+    pickle_out = open("Testing_Images.pickle", "wb")
+    pickle.dump(X, pickle_out)
+    pickle_out.close()
+
+    pickle_out = open("Testing_Labels.pickle", "wb")
+    pickle.dump(y, pickle_out)
+    pickle_out.close()
+
+
 # global variables
 CATAGORIES = ["HC-1", "HC-2", "HC-3", "HC-4", "HC-5", "HC-6", "HC-7"]
 TRAINING_DATA = []
@@ -123,7 +168,14 @@ print("Starting...")
 
 load_data()
 
+print('---Training Data---')
+TRAINING_DATA = increase_data(TRAINING_DATA)
+TRAINING_DATA = shuffle_data(TRAINING_DATA)
+
+print('---Testing Data---')
 TESTING_DATA = increase_data(TESTING_DATA)
+TESTING_DATA = shuffle_data(TESTING_DATA)
+
 
 # prints the elapsed time for convenience
 total_time = t.time() - start_time
