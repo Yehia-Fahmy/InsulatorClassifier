@@ -43,10 +43,10 @@ def reshape_data(X, y):
     print(f"Reshaping data...")
     X = np.array(X)     # ensuring that lists are instead arrays
     X = X / 255
-    triple_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
+    # triple_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
     y = np.array(y)
     y = to_categorical(y)
-    print(f"triple_channel.shape(): {triple_channel.shape}, y.shape(): {y.shape}")
+    # print(f"triple_channel.shape(): {triple_channel.shape}, y.shape(): {y.shape}")
     return X, y
 
 
@@ -63,11 +63,13 @@ def build_network():
     model.summary()
     return model
 
+
 # function to train the model
 def train_model(model, imgs, labels):
     print("Training model...")
     model.fit(imgs, labels, epochs=NUM_EPOCHS, validation_split=0.1, batch_size=BATCH_SIZE)
     return model
+
 
 # function to build a working model
 def build_Mark_4_40(X):
@@ -102,7 +104,7 @@ CATAGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', '
 DATA = []
 TESTING_DATA = []
 IMG_SIZE = 224
-NUM_EPOCHS = 1
+NUM_EPOCHS = 3
 BATCH_SIZE = 10
 
 
