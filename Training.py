@@ -43,11 +43,11 @@ def reshape_data(X, y):
     print(f"Reshaping data...")
     X = np.array(X)     # ensuring that lists are instead arrays
     X = X / 255
-    # triple_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
+    triple_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
     y = np.array(y)
     y = to_categorical(y)
-    print(f"X.shape(): {X.shape}, y.shape(): {y.shape}")
-    return X, y
+    print(f"triple_channel.shape(): {triple_channel.shape}, y.shape(): {y.shape}")
+    return triple_channel, y
 
 
 # function to build the network
@@ -166,7 +166,7 @@ IMG_SIZE = 224
 TRAINING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'
 # path to testing photos
 TESTING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\Testing_DatabaseOrganized'
-NUM_EPOCHS = 100
+NUM_EPOCHS = 1
 BATCH_SIZE = 30
 KERAS_MODEL_NAME = 'Full_Size_Model.h5'
 TF_LITE_MODEL_NAME = 'TF_Lite_Model.tflite'
