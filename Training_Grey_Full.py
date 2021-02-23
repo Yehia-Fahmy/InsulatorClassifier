@@ -51,15 +51,33 @@ def reshape_data(X, y):
 
 
 # function to build the network
-def build_network():
-    mobile = keras.applications.mobilenet.MobileNet()
-    x = mobile.layers[-6].output
-    predictions = Dense(7, activation='softmax')(x)
-    model = M(inputs=mobile.input, outputs=predictions)
-    # makes only the last 5 layers trainable
-    for layer in model.layers[:-23]:
-        layer.trainable = False
-    model.compile(Adam(lr=.0001), loss='categorical_crossentropy', metrics=['accuracy'])
+def build_network(X):
+    print("Building network...")
+    model = Sequential()
+    # First Layer
+    model.add(
+        Conv2D(512, kernel_size=(4, 4), activation='relu', input_shape=(X.shape[1:]), padding='same', strides=(2, 2)))
+    # Second Layer
+    model.add(Conv2D(256, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Third Layer
+    model.add(Conv2D(128, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Fourth Layer
+    model.add(Conv2D(128, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Third Layer
+    model.add(Conv2D(128, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Fourth Layer
+    model.add(Conv2D(128, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Fifth Layer
+    model.add(Conv2D(256, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Sixth Layer
+    model.add(Conv2D(512, kernel_size=(4, 4), activation='relu', padding='same', strides=(2, 2)))
+    # Final Layer
+    model.add(Flatten())
+    model.add(Dense(7, activation='softmax'))
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adamax',
+                  metrics=['accuracy'])
+    # All Done
     model.summary()
     return model
 
@@ -67,7 +85,7 @@ def build_network():
 # function to train the model
 def train_model(model, imgs, labels):
     print("Training model...")
-    model.fit(imgs, labels, epochs=NUM_EPOCHS, validation_split=0.1, batch_size=BATCH_SIZE)
+    model.fit(imgs, labels, epochs=NUM_EPOCHS, validation_split=0, batch_size=BATCH_SIZE)
     return model
 
 
@@ -103,9 +121,9 @@ def build_Mark_4_40(X):
 CATAGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)']
 DATA = []
 TESTING_DATA = []
-IMG_SIZE = 224
+IMG_SIZE = 481
 NUM_EPOCHS = 4
-BATCH_SIZE = 20
+BATCH_SIZE = 3
 
 
 # Code to run
@@ -123,7 +141,7 @@ training_images, training_labels = reshape_data(training_images, training_labels
 testing_images, testing_labels = reshape_data(testing_images, testing_labels)
 
 # build and train the model
-our_model = build_Mark_4_40(training_images)
+our_model = build_network(training_images)
 trained_model = train_model(our_model, training_images, training_labels)
 
 # prints the elapsed time for convenience
