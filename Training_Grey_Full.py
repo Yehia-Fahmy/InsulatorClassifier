@@ -117,6 +117,20 @@ def build_Mark_4_40(X):
     return model
 
 
+def build_test_model(X):
+    print('Building Test Model...')
+    model = Sequential()
+    model.add(Dense(10, activation='relu', input_shape=(X.shape[1:])))
+    model.add(Dense(10, activation='relu'))
+    # Final Layer
+    model.add(Flatten())
+    model.add(Dense(7, activation='softmax'))
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adamax',
+                  metrics=['accuracy'])
+    return model
+
+
 # function to convert from tf model to tf.lite for mobile application
 def convert_model(model):
     tf_lite_converter = tf.lite.TFLiteConverter.from_keras_model(model)
@@ -166,7 +180,7 @@ training_images, training_labels = reshape_data(training_images, training_labels
 testing_images, testing_labels = reshape_data(testing_images, testing_labels)
 
 # build and train the model
-our_model = build_network(training_images)
+our_model = build_test_model(training_images)
 trained_model = train_model(our_model, training_images, training_labels)
 
 # save the model

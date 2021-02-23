@@ -95,8 +95,8 @@ def build_Mark_4_40(X):
 def build_test_model(X):
     print('Building Test Model...')
     model = Sequential()
-    model.add(Dense(50, activation='relu', input_shape=(X.shape[1:])))
-    model.add(Dense(50, activation='relu'))
+    model.add(Dense(10, activation='relu', input_shape=(X.shape[1:])))
+    model.add(Dense(10, activation='relu'))
     # Final Layer
     model.add(Flatten())
     model.add(Dense(7, activation='softmax'))
