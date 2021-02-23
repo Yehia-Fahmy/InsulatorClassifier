@@ -104,7 +104,7 @@ CATAGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', '
 DATA = []
 TESTING_DATA = []
 IMG_SIZE = 224
-NUM_EPOCHS = 10
+NUM_EPOCHS = 4
 BATCH_SIZE = 20
 
 
