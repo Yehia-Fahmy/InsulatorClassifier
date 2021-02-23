@@ -43,11 +43,11 @@ def reshape_data(X, y):
     print(f"Reshaping data...")
     X = np.array(X)     # ensuring that lists are instead arrays
     X = X / 255
-    triple_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
+    # triple_channel = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
     y = np.array(y)
     y = to_categorical(y)
-    print(f"triple_channel.shape(): {triple_channel.shape}, y.shape(): {y.shape}")
-    return triple_channel, y
+    # print(f"triple_channel.shape(): {triple_channel.shape}, y.shape(): {y.shape}")
+    return X, y
 
 
 # function to build the network
@@ -61,6 +61,13 @@ def build_network():
         layer.trainable = False
     model.compile(Adam(lr=.0001), loss='categorical_crossentropy', metrics=['accuracy'])
     model.summary()
+    return model
+
+
+# function to train the model
+def train_model(model, imgs, labels):
+    print("Training model...")
+    model.fit(imgs, labels, epochs=NUM_EPOCHS, validation_split=0.1, batch_size=BATCH_SIZE)
     return model
 
 
@@ -92,84 +99,13 @@ def build_Mark_4_40(X):
     return model
 
 
-def build_test_model(X):
-    print('Building Test Model...')
-    model = Sequential()
-    model.add(Dense(50, activation='relu', input_shape=(X.shape[1:])))
-    model.add(Dense(50, activation='relu'))
-    # Final Layer
-    model.add(Flatten())
-    model.add(Dense(7, activation='softmax'))
-    model.compile(loss='categorical_crossentropy',
-                  optimizer='adamax',
-                  metrics=['accuracy'])
-    return model
-
-
-# function to train the model
-def train_model(model, imgs, labels):
-    print("Training model...")
-    model.fit(imgs, labels, epochs=NUM_EPOCHS, validation_split=0.1, batch_size=BATCH_SIZE)
-    return model
-
-
-# print the results to the txt file
-def print_results():
-    model_results = f'''
-    #################################################################
-    IMG_SIZE = {IMG_SIZE}
-    ACCURACY = {acc}%
-    TIME = {total_time}
-    EPOCHS = {NUM_EPOCHS}
-    Full {full_bytes}
-    Lite {lite_bytes}
-    '''
-    f1 = open('results.txt', 'r')
-    str1 = f1.read()
-    f1.close()
-    f2 = open('results.txt', 'w')
-    f2.write(model_results)
-    our_model.summary(print_fn=lambda x: f2.write(x + '\n'))
-    f2.write(str1)
-    f2.close()
-
-
-# function to convert from tf model to tf.lite for mobile application
-def convert_model(model):
-    tf_lite_converter = tf.lite.TFLiteConverter.from_keras_model(model)
-    new_model = tf_lite_converter.convert()
-    return new_model
-
-
-# gets size of file
-def get_file_size(file_path):
-    size = os.path.getsize(file_path)
-    return size
-
-
-# converts bytes for readability
-def convert_bytes(size, unit=None):
-    if unit == "KB":
-        return 'File size: ' + str(round(size / 1024, 3)) + ' Kilobytes'
-    elif unit == "MB":
-        return 'File size: ' + str(round(size / (1024 * 1024), 3)) + ' Megabytes'
-    else:
-        return 'File size: ' + str(size) + ' bytes'
-
-
 # global variables
 CATAGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)']
 DATA = []
 TESTING_DATA = []
 IMG_SIZE = 224
-# path to training photos
-TRAINING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\DatabaseOrganized'
-# path to testing photos
-TESTING_PATH = r'C:\Users\Yehia\OneDrive - University of Waterloo\Winter 2021 Co-op\Testing_DatabaseOrganized'
-NUM_EPOCHS = 1
-BATCH_SIZE = 30
-KERAS_MODEL_NAME = 'Full_Size_Model.h5'
-TF_LITE_MODEL_NAME = 'TF_Lite_Model.tflite'
+NUM_EPOCHS = 4
+BATCH_SIZE = 20
 
 
 # Code to run
@@ -187,32 +123,18 @@ training_images, training_labels = reshape_data(training_images, training_labels
 testing_images, testing_labels = reshape_data(testing_images, testing_labels)
 
 # build and train the model
-our_model = build_network()
+our_model = build_Mark_4_40(training_images)
 trained_model = train_model(our_model, training_images, training_labels)
-
-# evaluate the model
-loss, acc = trained_model.evaluate(testing_images, testing_labels, batch_size=BATCH_SIZE, use_multiprocessing='True')
-acc = round(acc * 100, 2)
-print(f'accuracy: {acc}%')
-
-# save the model
-trained_model.save(KERAS_MODEL_NAME)
-full_bytes = convert_bytes(get_file_size(KERAS_MODEL_NAME), "MB")
-
-# convert the model
-tf_lite_model = convert_model(trained_model)
-
-# save the model
-open(TF_LITE_MODEL_NAME, "wb").write(tf_lite_model)
-lite_bytes = convert_bytes(get_file_size(TF_LITE_MODEL_NAME), "MB")
 
 # prints the elapsed time for convenience
 total_time = t.time() - start_time
 total_time = round(total_time, 2)
 total_time = convert_time(total_time)
 
-# prints the results
-print_results()
+# evaluate the model
+loss, acc = trained_model.evaluate(testing_images, testing_labels, batch_size=BATCH_SIZE, use_multiprocessing='True')
+acc = round(acc * 100, 2)
+print(f'accuracy: {acc}%')
 
 # final message
 print(f"Finished in: {total_time}")
