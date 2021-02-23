@@ -117,6 +117,29 @@ def build_Mark_4_40(X):
     return model
 
 
+# function to convert from tf model to tf.lite for mobile application
+def convert_model(model):
+    tf_lite_converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    new_model = tf_lite_converter.convert()
+    return new_model
+
+
+# gets size of file
+def get_file_size(file_path):
+    size = os.path.getsize(file_path)
+    return size
+
+
+# converts bytes for readability
+def convert_bytes(size, unit=None):
+    if unit == "KB":
+        return 'File size: ' + str(round(size / 1024, 3)) + ' Kilobytes'
+    elif unit == "MB":
+        return 'File size: ' + str(round(size / (1024 * 1024), 3)) + ' Megabytes'
+    else:
+        return 'File size: ' + str(size) + ' bytes'
+
+
 # global variables
 CATAGORIES = ['Class (1)', 'Class (2)', 'Class (3)', 'Class (4)', 'Class (5)', 'Class (6)', 'Class (7)']
 DATA = []
@@ -124,6 +147,8 @@ TESTING_DATA = []
 IMG_SIZE = 481
 NUM_EPOCHS = 4
 BATCH_SIZE = 3
+KERAS_MODEL_NAME = 'Full_Size_Model.h5'
+TF_LITE_MODEL_NAME = 'TF_Lite_Model.tflite'
 
 
 # Code to run
@@ -144,15 +169,26 @@ testing_images, testing_labels = reshape_data(testing_images, testing_labels)
 our_model = build_network(training_images)
 trained_model = train_model(our_model, training_images, training_labels)
 
-# prints the elapsed time for convenience
-total_time = t.time() - start_time
-total_time = round(total_time, 2)
-total_time = convert_time(total_time)
+# save the model
+trained_model.save(KERAS_MODEL_NAME)
+full_bytes = convert_bytes(get_file_size(KERAS_MODEL_NAME), "MB")
+
+# convert the model
+tf_lite_model = convert_model(trained_model)
+
+# save the tf.lite model
+open(TF_LITE_MODEL_NAME, "wb").write(tf_lite_model)
+lite_bytes = convert_bytes(get_file_size(TF_LITE_MODEL_NAME), "MB")
 
 # evaluate the model
 loss, acc = trained_model.evaluate(testing_images, testing_labels, batch_size=BATCH_SIZE, use_multiprocessing='True')
 acc = round(acc * 100, 2)
 print(f'accuracy: {acc}%')
+
+# prints the elapsed time for convenience
+total_time = t.time() - start_time
+total_time = round(total_time, 2)
+total_time = convert_time(total_time)
 
 # final message
 print(f"Finished in: {total_time}")
