@@ -5,3 +5,4 @@ from tensorflow import keras
 from matplotlib import pyplot as plt
 import time as t
 import pickle
+import tensorflow as tf
