@@ -47,24 +47,6 @@ def load_data():
     print(f'{len(TESTING_DATA)} Testing images')
 
 
-# a function to crop the image into smaller images
-def crop_data(data):
-    print("Cropping data...")
-    err = 0             # variable to keep track of any missed images
-    new_data = []       # list to hold the data
-    try:
-        for img in data:                # for each image
-            for i in range(round(ORIGINAL_SIZE / IMG_SIZE)):          # going through the rows
-                for k in range(round(ORIGINAL_SIZE / IMG_SIZE)):      # going through the columns
-                    new_data.append([img[0][i * IMG_SIZE:(i + 1) * IMG_SIZE, k * IMG_SIZE:(k + 1) * IMG_SIZE],
-                                     img[1]])  # adds the data as a list
-    except Exception as e:
-        err = err + 1
-    print(f'Finished cropping with {err} errors')
-    print(f'{len(new_data)} images')
-    return new_data
-
-
 # rotates the images in all orientations
 def rotate_data(data):
     print("Rotating data...")
@@ -102,7 +84,6 @@ def flip_data(data):
 # runs all the functions that can increase the numbers of training data
 def increase_data(data):
     print('Increasing data...')
-    # new_data = crop_data(data)
     new_data = rotate_data(data)
     new_data = flip_data(new_data)
     return new_data
