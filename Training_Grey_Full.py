@@ -180,7 +180,7 @@ training_images, training_labels = reshape_data(training_images, training_labels
 testing_images, testing_labels = reshape_data(testing_images, testing_labels)
 
 # build and train the model
-our_model = build_test_model(training_images)
+our_model = build_network(training_images)
 trained_model = train_model(our_model, training_images, training_labels)
 
 # save the model
