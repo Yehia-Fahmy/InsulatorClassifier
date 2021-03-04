@@ -8,6 +8,7 @@ import pickle
 import tensorflow as tf
 
 
+
 # function to convert the time into something readable
 def convert_time(seconds):
     seconds = seconds % (24 * 3600)
@@ -29,3 +30,24 @@ def load_data(file_name):
 def show(img):
     plt.imshow(img, cmap='gray')
     plt.show()
+
+
+# load the tf lite model and allocate the tensors
+interpreter = tf.lite.Interpreter(model_path="TF_Lite_Model.tflite")
+interpreter.allocate_tensors()
+
+# get input and output tensors
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
+
+# test model on random input sample
+input_shape = input_details[0]['shape']
+input_data = np.array(np.random.random_sample(input_shape), dtype=np.float32)
+interpreter.set_tensor(input_details[0]['index'], input_data)
+
+# predict
+interpreter.invoke()
+
+# get the result
+output_data = interpreter.get_tensor(output_details[0]['index'])
+print(output_data)
