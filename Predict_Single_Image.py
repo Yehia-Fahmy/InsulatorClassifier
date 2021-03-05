@@ -45,18 +45,31 @@ output_details1 = interpreter1.get_output_details()
 input_details2 = interpreter2.get_input_details()
 output_details2 = interpreter2.get_output_details()
 
+print('---input details---')
 print(input_details1)
 print(input_details2)
-exit()
 
 # test model on random input sample
-input_shape = input_details[0]['shape']
-input_data = np.array(np.random.random_sample(input_shape), dtype=np.float32)
-interpreter.set_tensor(input_details[0]['index'], input_data)
+input_shape1 = input_details1[0]['shape']
+input_data1 = np.array(np.random.random_sample(input_shape1), dtype=np.float32)
+interpreter1.set_tensor(input_details1[0]['index'], input_data1)
+
+input_shape2 = input_details2[0]['shape']
+input_data2 = np.array(np.random.random_sample(input_shape2), dtype=np.float32)
+interpreter2.set_tensor(input_details2[0]['index'], input_data2)
 
 # predict
-interpreter.invoke()
+interpreter1.invoke()
+interpreter2.invoke()
 
 # get the result
-output_data = interpreter.get_tensor(output_details[0]['index'])
-print(output_data)
+output_data1 = interpreter1.get_tensor(output_details1[0]['index'])
+output_data2 = interpreter2.get_tensor(output_details2[0]['index'])
+
+print('---output details---')
+print(output_details1)
+print(output_details2)
+
+print('---output data---')
+print(output_data1)
+print(output_data2)
