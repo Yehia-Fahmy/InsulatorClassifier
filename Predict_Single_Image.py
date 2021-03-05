@@ -33,12 +33,21 @@ def show(img):
 
 
 # load the tf lite model and allocate the tensors
-interpreter = tf.lite.Interpreter(model_path="TF_Lite_Model.tflite")
-interpreter.allocate_tensors()
+interpreter1 = tf.lite.Interpreter(model_path="TF_Lite_Model.tflite")
+interpreter2 = tf.lite.Interpreter(model_path="model_unquant.tflite")
+
+interpreter1.allocate_tensors()
+interpreter2.allocate_tensors()
 
 # get input and output tensors
-input_details = interpreter.get_input_details()
-output_details = interpreter.get_output_details()
+input_details1 = interpreter1.get_input_details()
+output_details1 = interpreter1.get_output_details()
+input_details2 = interpreter2.get_input_details()
+output_details2 = interpreter2.get_output_details()
+
+print(input_details1)
+print(input_details2)
+exit()
 
 # test model on random input sample
 input_shape = input_details[0]['shape']
