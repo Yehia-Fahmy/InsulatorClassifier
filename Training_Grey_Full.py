@@ -120,8 +120,8 @@ def build_Mark_4_40(X):
 def build_test_model(X):
     print('Building Test Model...')
     model = Sequential()
-    model.add(Dense(10, activation='relu', input_shape=(X.shape[1:])))
-    model.add(Dense(10, activation='relu'))
+    model.add(Dense(1, activation='relu', input_shape=(X.shape[1:])))
+    model.add(Dense(1, activation='relu'))
     # Final Layer
     model.add(Flatten())
     model.add(Dense(7, activation='softmax'))
@@ -180,8 +180,9 @@ training_images, training_labels = reshape_data(training_images, training_labels
 testing_images, testing_labels = reshape_data(testing_images, testing_labels)
 
 # build and train the model
-our_model = build_network(training_images)
-trained_model = train_model(our_model, training_images, training_labels)
+our_model = build_test_model(training_images)
+#trained_model = train_model(our_model, training_images, training_labels)
+trained_model = our_model
 
 # save the model
 trained_model.save(KERAS_MODEL_NAME)
@@ -195,7 +196,8 @@ open(TF_LITE_MODEL_NAME, "wb").write(tf_lite_model)
 lite_bytes = convert_bytes(get_file_size(TF_LITE_MODEL_NAME), "MB")
 
 # evaluate the model
-loss, acc = trained_model.evaluate(testing_images, testing_labels, batch_size=BATCH_SIZE, use_multiprocessing='True')
+# loss, acc = trained_model.evaluate(testing_images, testing_labels, batch_size=BATCH_SIZE, use_multiprocessing='True')
+acc = 0
 acc = round(acc * 100, 2)
 print(f'accuracy: {acc}%')
 
